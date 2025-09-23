@@ -12,7 +12,7 @@ public class Board {
     public int getSize() { return 48; } //Dimensione massima del tabellone (12*4)
 
     public boolean revealLetter(char c) {
-        if(phrase.contains(String.valueOf(c))) {
+        if(phrase.toLowerCase().contains(String.valueOf(Character.toLowerCase(c)))) {
             revealedLetters.add(c);
             return true;
         }
@@ -20,14 +20,10 @@ public class Board {
     }
 
     public int numberOccurrences(char c) {
-        StringTokenizer st = new StringTokenizer(phrase, " ");
         int count = 0;
-        while(st.hasMoreTokens()) {
-            String word = st.nextToken();
-            if(word.contains(String.valueOf(c))) {
-                ++count;
-            }
-        }
+        char character = Character.toLowerCase(c);
+        for(char ch: phrase.toCharArray())
+            if(Character.toLowerCase(ch) == character) ++count;
         return count;
     }
 
@@ -36,30 +32,39 @@ public class Board {
     }
 
     public boolean isSolved() {
-        StringTokenizer st = new StringTokenizer(phrase, " ");
-        while(st.hasMoreTokens()) {
-            String word = st.nextToken();
-            for(int i = 0; i < word.length(); i++) {
-                if(!revealedLetters.contains(word.charAt(i))) {
+        for(char c: phrase.toCharArray())
+            if(Character.isLetter(c))
+                if(!revealedLetters.contains(Character.toLowerCase(c)))
                     return false;
-                }
-            }
-        }
         return true;
     }
 
-    public String display() { return phrase; }
+    public String display() {
+        StringBuilder sb = new StringBuilder();
+        for(char c: phrase.toCharArray()) {
+            if(c == ' ')
+                sb.append(' ');
+            else if (String.valueOf(c).matches("[^a-zA-Z]"))
+                sb.append(c).append(' ');
+            else if (revealedLetters.contains(Character.toLowerCase(c)))
+                sb.append(c).append(' ');
+            else
+                sb.append("_ ");
+        }
+        return sb.toString();
+    }
 
     public boolean checkPhrase(String phrase) {
-        if(phrase.length() != this.phrase.length()) return false;
-        StringTokenizer st1 = new StringTokenizer(this.phrase, " ");
-        StringTokenizer st2 = new StringTokenizer(phrase, " ");
-        while(st1.hasMoreTokens() && st2.hasMoreTokens()) {
-            String word1 = st1.nextToken();
-            String word2 = st2.nextToken();
-            if(!word1.equals(word2)) return false;
-        }
-        return true;
+        if( phrase == null ) return false;
+        return normalize(this.phrase).equals(normalize(phrase));
+    }
+
+    private String normalize(String input) {
+        return input
+                .toLowerCase()
+                .replaceAll("[^a-zàèéìòù ]", "")
+                .replaceAll("\\s+", " ")
+                .trim();
     }
 
 }
