@@ -1,17 +1,18 @@
 package it.game.service.command;
 
 import it.game.model.Player;
+import it.game.service.GameManager;
 
 public class ChoiceConsonantCommand implements GameCommand<Character> {
-    private final Player player;
+    private final GameManager gameManager;
 
-    public ChoiceConsonantCommand(Player player) {
-        this.player = player;
+    public ChoiceConsonantCommand(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     @Override
     public Character execute() {
-        return player.choiceConsonant();
+        return gameManager.choiceConsonant();
     }
 
 }

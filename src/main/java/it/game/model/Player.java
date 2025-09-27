@@ -8,7 +8,7 @@ public class Player {
     private int score;
     private final static Scanner sc = new Scanner(System.in);
 
-    Player(String id, String name) {
+    public Player(String id, String name) {
         this.id = id; this.name = name; this.score = 0;
     }
 

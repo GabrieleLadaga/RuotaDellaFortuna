@@ -1,17 +1,16 @@
 package it.game.service.command;
 
-import it.game.model.Sector;
-import it.game.model.wheel.AbstractWheel;
+import it.game.service.GameManager;
 
-public class SpinWheelCommand implements GameCommand<Sector> {
-    private final AbstractWheel wheel;
+public class SpinWheelCommand implements GameCommand<String> {
+    private final GameManager gameManager;
 
-    public SpinWheelCommand(AbstractWheel wheel) {
-        this.wheel = wheel;
+    public SpinWheelCommand(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     @Override
-    public Sector execute() {
-        return wheel.spin();
+    public String execute() {
+        return gameManager.spinWheel();
     }
 }

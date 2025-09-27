@@ -2,13 +2,15 @@ package it.game.model;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class Board {
     private String phrase;
+    private String category;
     private final List<Character> revealedLetters = new LinkedList<>();
 
     public void setPhrase(String phrase) { this.phrase = phrase; }
+    public void setCategory(String category) { this.category = category; }
+    public String getCategory() { return this.category; }
     public int getSize() { return 48; } //Dimensione massima del tabellone (12*4)
 
     public boolean revealLetter(char c) {
@@ -65,6 +67,11 @@ public class Board {
                 .replaceAll("[^a-zàèéìòù ]", "")
                 .replaceAll("\\s+", " ")
                 .trim();
+    }
+
+    public void clear() {
+        phrase = null;
+        category = null;
     }
 
 }
