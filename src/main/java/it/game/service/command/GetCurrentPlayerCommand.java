@@ -2,16 +2,16 @@ package it.game.service.command;
 
 import it.game.service.GameManager;
 
-public class SpinWheelCommand implements GameCommand<String> {
+public class GetCurrentPlayerCommand implements GameCommand<String> {
     private final GameManager gameManager;
 
-    public SpinWheelCommand(GameManager gameManager) {
+    public GetCurrentPlayerCommand(GameManager gameManager) {
         this.gameManager = gameManager;
     }
 
     @Override
     public String execute() {
-        return gameManager.spinWheel();
+        return gameManager.getCurrentPlayer().getName();
     }
 
 }

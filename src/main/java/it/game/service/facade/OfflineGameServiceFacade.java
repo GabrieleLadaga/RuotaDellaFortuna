@@ -2,12 +2,15 @@ package it.game.service.facade;
 
 import it.game.model.Player;
 import it.game.service.GameManager;
+import it.game.service.command.*;
 
 public class OfflineGameServiceFacade implements GameServiceFacade {
     private final GameManager gameManager;
+    private final GameCommandInvoker invoker;
 
-    public OfflineGameServiceFacade(GameManager gameManager) {
+    public OfflineGameServiceFacade(GameManager gameManager, GameCommandInvoker invoker) {
         this.gameManager = gameManager;
+        this.invoker = invoker;
     }
 
     @Override
@@ -23,55 +26,62 @@ public class OfflineGameServiceFacade implements GameServiceFacade {
 
     @Override
     public void startRound() {
-        gameManager.startRound();
+        GameCommand<Void> command = new StartRoundCommand(gameManager);
+        invoker.executeCommand(command);
     }
 
     @Override
     public String spinWheel() {
-        return gameManager.spinWheel();
+        GameCommand<String> command = new SpinWheelCommand(gameManager);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public boolean guessLetter(char letter) {
-        return gameManager.revealLetter(letter);
+        GameCommand<Boolean> command = new RevealLetterCommand(gameManager, letter);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public boolean buyVowel(char vowel) {
-        if(gameManager.buyVowel()) {
-            return gameManager.revealLetter(vowel);
-        }
-        return false;
+        GameCommand<Boolean> command = new BuyVowelCommand(gameManager, vowel);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public boolean solvePuzzle(String phrase) {
-        return gameManager.checkPhrase(phrase);
+        GameCommand<Boolean> command = new CheckPhraseCommand(gameManager, phrase);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public void endRound() {
-        gameManager.endRound();
+        GameCommand<Void> command = new EndRoundCommand(gameManager);
+        invoker.executeCommand(command);
     }
 
     @Override
     public boolean nextRound() {
-        return gameManager.nextRound();
+        GameCommand<Boolean> command = new NextRoundCommand(gameManager);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public String displayBoard() {
-        return gameManager.display();
+        GameCommand<String> command = new DisplayBoardCommand(gameManager);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public String getCategory() {
-        return gameManager.getCategory();
+        GameCommand<String> command = new GetCategoryCommand(gameManager);
+        return invoker.executeCommand(command);
     }
 
     @Override
     public String getCurrentPlayer() {
-        return gameManager.getCurrentPlayer().getName();
+        GameCommand<String> command = new GetCurrentPlayerCommand(gameManager);
+        return invoker.executeCommand(command);
     }
 
 }
