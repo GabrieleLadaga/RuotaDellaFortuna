@@ -260,7 +260,7 @@ public class BoardView extends VerticalLayout implements GameObserver {
                 facade.startRound();
                 getUI().ifPresent(ui -> ui.navigate("wheel"));
             } else {
-                getUI().ifPresent(ui -> ui.navigate("finish"));
+                getUI().ifPresent(ui -> ui.navigate("results"));
             }
         });
         dialog.add(okButton);
@@ -347,16 +347,9 @@ public class BoardView extends VerticalLayout implements GameObserver {
         }
 
         if(allFilled) {
-            StringBuilder guess = new StringBuilder();
-            for(int i = 0; i < ROWS; i++) {
-                for(int j = 0; j < COLUMNS; j++) {
-                    String text = cells[i][j].getText();
-                    if(!text.isBlank()) guess.append(text);
-                    else guess.append(" ");
-                }
-            }
+            StringBuilder guess = reconstructPhraseFromBuilder();
 
-            boolean correct = facade.solvePuzzle(guess.toString());
+            boolean correct = facade.solvePuzzle(guess.toString().trim());
             if(correct) {
                 update();
 
@@ -371,7 +364,7 @@ public class BoardView extends VerticalLayout implements GameObserver {
                         facade.startRound();
                         getUI().ifPresent(ui -> ui.navigate("wheel"));
                     } else {
-                        getUI().ifPresent(ui -> ui.navigate("finish"));
+                        getUI().ifPresent(ui -> ui.navigate("results"));
                     }
                 });
                 okButton.getStyle().set("margin-top", "15px");
@@ -379,6 +372,8 @@ public class BoardView extends VerticalLayout implements GameObserver {
 
                 dialog.open();
             } else {
+                update();
+
                 Dialog errorDialog = new Dialog();
                 errorDialog.addClassName("dialog");
 
@@ -406,6 +401,33 @@ public class BoardView extends VerticalLayout implements GameObserver {
             userFilledCells.clear();
             update();
         }
+    }
+
+    private StringBuilder reconstructPhraseFromBuilder() {
+        StringBuilder guess = new StringBuilder();
+        for(int i = 0; i < ROWS; i++) {
+            StringBuilder rowBuilder = new StringBuilder();
+            boolean rowHasContent = false;
+            for(int j = 0; j < COLUMNS; j++) {
+                String text = cells[i][j].getText();
+                if(!text.isBlank()) {
+                    rowBuilder.append(text);
+                    rowHasContent = true;
+                } else {
+                    if(rowBuilder.length() > 0 && rowBuilder.charAt(rowBuilder.length()-1) != ' ') {
+                        rowBuilder.append(" ");
+                    }
+                }
+            }
+
+            if(rowHasContent) {
+                if(guess.length() > 0) {
+                    guess.append(" ");
+                }
+                guess.append(rowBuilder.toString().trim());
+            }
+        }
+        return guess;
     }
 
     private void toggleBuyVowelMode() {

@@ -13,6 +13,7 @@ import it.game.model.Player;
 import it.game.service.facade.GameServiceFacade;
 import it.game.service.singleton.GameContext;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ResultsView extends VerticalLayout {
         H1 title = new H1("Classifica Finale");
         title.addClassName("title");
 
-        List<Player> players = facade.getPlayers();
+        List<Player> players = new ArrayList<>(facade.getPlayers());
 
         players.sort(Comparator.comparingInt(Player::getScore).reversed());
 

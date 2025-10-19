@@ -35,7 +35,7 @@ public class StartView extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
 
         Div titleDiv = new Div();
-        titleDiv.setWidth("20px");
+        titleDiv.setHeight("170px");
 
         H1 title = new H1("Ruota della Fortuna");
         title.addClassName("title");

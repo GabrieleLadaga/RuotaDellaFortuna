@@ -23,7 +23,13 @@ public class CustomSlider extends Component {
     }
 
     public int getValue() {
-        return getElement().getProperty("value", 0);
+        String valueStr = getElement().getProperty("value", "5");
+        System.out.println(valueStr);
+        try {
+            return Integer.parseInt(valueStr);
+        } catch (NumberFormatException e) {
+            return 5;
+        }
     }
 
     @DomEvent("value-changed")

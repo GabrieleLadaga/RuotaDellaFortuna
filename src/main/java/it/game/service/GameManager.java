@@ -72,7 +72,8 @@ public class GameManager extends GameSubject {
     }
 
     public boolean nextRound() {
-        if(--numRounds > 0) {
+        if(numRounds > 1) {
+            --numRounds;
             startRound();
             return true;
         }
@@ -80,6 +81,19 @@ public class GameManager extends GameSubject {
         updateDBMS();
         notifyObservers();
         return false;
+    }
+
+    public void reset() {
+        this.turn = 0;
+        this.numRounds = 0;
+        currentWheelValue = 0;
+        this.lastSpinType = "";
+        this.state = GameState.WAITING;
+        this.roundStarted = false;
+        this.canInsertConsonant = false;
+        this.partialJackpot = new int[0];
+        this.players = new Player[0];
+        this.board.clear();
     }
 
     private void updateDBMS() {

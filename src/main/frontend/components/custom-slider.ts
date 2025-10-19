@@ -139,9 +139,10 @@ export class CustomSlider extends LitElement {
         const finalValue = Math.max(this.min, Math.min(steppedValue, this.max));
 
         if(finalValue !== this.value) {
-            this.value = finalValue;
-            this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
-            this.requestUpdate();
+            this.setValue(finalValue);
+            //this.value = finalValue;
+            //this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
+            //this.requestUpdate();
         }
     }
 
@@ -159,11 +160,28 @@ export class CustomSlider extends LitElement {
         document.removeEventListener('touchend', this.stopDrag);
     }
 
+    setValue(newValue: number) {
+        console.log("New Value: " + newValue);
+        if(this.value !== newValue) {
+            console.log("New Value2: " + newValue);
+            this.value = newValue;
+
+            this.requestUpdate();
+
+            this.dispatchEvent(new CustomEvent('value-changed', {
+                detail: { value : this.value },
+                bubbles: true,
+                composed: true
+            }));
+        }
+    }
+
     onInput(event: Event) {
         const target = event.target as HTMLInputElement;
-        this.value = Number(target.value);
-        this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
-        this.requestUpdate();
+        this.setValue(Number(target.value));
+        //this.value = Number(target.value);
+        //this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
+        //this.requestUpdate();
     }
 
     render() {
@@ -181,7 +199,7 @@ export class CustomSlider extends LitElement {
                    min="${this.min}"
                    max="${this.max}"
                    step="${this.step}"
-                   .value="${this.value}"
+                   value="${this.value.toString()}"
                    @input="${this.onInput}"
             />
         </div>

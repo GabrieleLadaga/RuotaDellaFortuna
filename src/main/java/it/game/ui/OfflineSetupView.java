@@ -22,6 +22,7 @@ public class OfflineSetupView extends VerticalLayout {
     private final CustomSlider roundSlider;
     private final VerticalLayout nameLayout;
     private final List<TextField> nameField = new ArrayList<>();
+    private int currentRounds = 5;
 
     public OfflineSetupView() {
         setSizeFull();
@@ -65,7 +66,7 @@ public class OfflineSetupView extends VerticalLayout {
         playerSlider = new CustomSlider();
         playerSlider.setMin(2);
         playerSlider.setMax(5);
-        playerSlider.setValue(3);
+        playerSlider.setValue(2);
 
         playerSlider.addValueChangeListener(e -> updatePlayerFields(e.getValue()));
 
@@ -80,6 +81,11 @@ public class OfflineSetupView extends VerticalLayout {
         roundSlider.setMin(1);
         roundSlider.setMax(10);
         roundSlider.setValue(5);
+
+        roundSlider.addValueChangeListener(event ->{
+            this.currentRounds = event.getValue();
+            System.out.println("Rounds aggiornati a: " + this.currentRounds);
+        });
 
         VerticalLayout roundLayout = new VerticalLayout(roundLabel, roundSlider);
         roundLayout.setAlignItems(Alignment.CENTER);
@@ -120,16 +126,21 @@ public class OfflineSetupView extends VerticalLayout {
     }
 
     private void startGame() {
-        int numRounds = roundSlider.getValue();
+        int numRounds = this.currentRounds;
         List<String> names = new ArrayList<>();
+
+        System.out.println("numRounds: " + numRounds);
 
         for(TextField field : nameField) {
             String name = field.getValue().trim().isEmpty() ? field.getPlaceholder() : field.getValue().trim();
             names.add(name);
         }
 
+        System.out.println("numRounds2: " + numRounds);
+
         GameContext ctx = GameContext.getInstance();
         ctx.getFacade().startGame(names, numRounds);
+        System.out.println("numRounds3: " + numRounds);
 
         getUI().ifPresent(ui -> ui.navigate("wheel"));
     }

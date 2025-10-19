@@ -21,6 +21,8 @@ public class OfflineGameServiceFacade implements GameServiceFacade {
 
     @Override
     public void startGame(List<String> names, int numRounds) {
+        gameManager.reset();
+
         Player[] players = new Player[names.size()];
         for (int i = 0; i < players.length; i++) {
             players[i] = new Player("" + i, names.get(i));
