@@ -1,25 +1,31 @@
 package it.game.service.facade;
 
+import com.vaadin.flow.component.html.Div;
 import it.game.model.Player;
+import it.game.model.Sector;
 import it.game.service.GameManager;
 import it.game.service.command.*;
+import it.game.service.memento.BoardMemento;
+import it.game.service.memento.BoardOriginator;
+
+import java.util.List;
 
 public class OfflineGameServiceFacade implements GameServiceFacade {
     private final GameManager gameManager;
     private final GameCommandInvoker invoker;
+    private final BoardOriginator originator;
 
-    public OfflineGameServiceFacade(GameManager gameManager, GameCommandInvoker invoker) {
-        this.gameManager = gameManager;
-        this.invoker = invoker;
+    public OfflineGameServiceFacade(GameManager gameManager, GameCommandInvoker invoker, BoardOriginator originator) {
+        this.gameManager = gameManager; this.invoker = invoker; this.originator = originator;
     }
 
     @Override
-    public void startGame(String name1, String name2, String name3, int numRounds) {
-        Player[] players = {
-                new Player("1", name1),
-                new Player("2", name2),
-                new Player("3", name3),
-        };
+    public void startGame(List<String> names, int numRounds) {
+        Player[] players = new Player[names.size()];
+        for (int i = 0; i < players.length; i++) {
+            players[i] = new Player("" + i, names.get(i));
+        }
+
         gameManager.setPlayers(players);
         gameManager.setNumRounds(numRounds);
     }
@@ -35,11 +41,9 @@ public class OfflineGameServiceFacade implements GameServiceFacade {
         GameCommand<String> command = new SpinWheelCommand(gameManager);
         return invoker.executeCommand(command);
     }
-
     @Override
     public boolean guessLetter(char letter) {
-        GameCommand<Boolean> command = new RevealLetterCommand(gameManager, letter);
-        return invoker.executeCommand(command);
+        return gameManager.revealLetter(letter);
     }
 
     @Override
@@ -67,21 +71,74 @@ public class OfflineGameServiceFacade implements GameServiceFacade {
     }
 
     @Override
-    public String displayBoard() {
-        GameCommand<String> command = new DisplayBoardCommand(gameManager);
-        return invoker.executeCommand(command);
+    public List<String> getMarkedTokens() {
+        return gameManager.getMarkedTokens();
     }
+
+    @Override
+    public boolean checkFinishConsonants() {
+        return gameManager.checkFinishConsonants();
+    }
+
+    @Override
+    public boolean checkFinishVowels() {
+        return gameManager.checkFinishVowels();
+    }
+
+    @Override
+    public boolean checkIfSolvedAfterGuess() { return  gameManager.checkIfSolvedAfterGuess(); }
+
+    @Override
+    public boolean alreadyCalledLetter(char letter) { return gameManager.alreadyCalledLetter(letter); }
 
     @Override
     public String getCategory() {
-        GameCommand<String> command = new GetCategoryCommand(gameManager);
+        return gameManager.getCategory();
+    }
+
+    @Override
+    public Player getCurrentPlayer() {
+        return gameManager.getCurrentPlayer();
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return gameManager.getPlayers();
+    }
+
+    @Override
+    public List<Sector> getWheel() {
+        GameCommand<List<Sector>> command = new GetWheelCommand(gameManager);
         return invoker.executeCommand(command);
     }
 
     @Override
-    public String getCurrentPlayer() {
-        GameCommand<String> command = new GetCurrentPlayerCommand(gameManager);
-        return invoker.executeCommand(command);
+    public int getTurn() {
+        return gameManager.getTurn();
+    }
+
+    @Override
+    public List<Integer> getAllPartialJackpot() {
+        return gameManager.getAllPartialJackpot();
+    }
+
+    @Override
+    public String getCurrentPhrase() { return gameManager.getCurrentPhrase(); }
+
+    @Override
+    public int getCurrentWheelValue() { return gameManager.getCurrentWheelValue(); }
+
+    @Override
+    public boolean canInsertConsonant() { return gameManager.canInsertConsonant(); }
+
+    @Override
+    public BoardMemento saveBoardState(Div[][] cells) {
+        return originator.saveState(cells);
+    }
+
+    @Override
+    public void restoreBoardState(BoardMemento memento, Div[][] cells) {
+        originator.restoreToBoard(memento, cells);
     }
 
 }

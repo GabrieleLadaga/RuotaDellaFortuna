@@ -1,9 +1,10 @@
 package it.game.service.observer;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class GameSubject {
-    private List<GameObserver> observers;
+    private final List<GameObserver> observers = new CopyOnWriteArrayList<>();
 
     public void attach(GameObserver observer) {
         observers.add(observer);
@@ -14,9 +15,8 @@ public abstract class GameSubject {
     }
 
     public void notifyObservers() {
-        for (GameObserver observer : observers) {
+        for(GameObserver observer : observers)
             observer.update();
-        }
     }
 
 }

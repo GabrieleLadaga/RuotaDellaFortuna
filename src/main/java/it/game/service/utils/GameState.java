@@ -1,8 +1,9 @@
 package it.game.service.utils;
 
 public enum GameState {
-    WAITING,
-    IN_PROGRESS,
-    ROUND_OVER,
-    GAME_OVER
+    WAITING,        //prima dell'inizio
+    IN_PROGRESS,    //round in corso
+    TURN_ENDED,     //fine turno
+    ROUND_OVER,     //round terminato
+    GAME_OVER       //partita finita
 }

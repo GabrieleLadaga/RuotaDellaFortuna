@@ -13,10 +13,7 @@ public class BuyVowelCommand implements GameCommand<Boolean> {
 
     @Override
     public Boolean execute() {
-        if(gameManager.buyVowel()) {
-            return gameManager.revealLetter(vowel);
-        }
-        return false;
+        return gameManager.buyVowel(vowel);
     }
 
 }

@@ -2,6 +2,7 @@ package it.game.model.wheel;
 
 import it.game.model.Sector;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -12,5 +13,7 @@ public abstract class AbstractWheel {
     public Sector spin() {
         return result.get(rand.nextInt(result.size()));
     }
+
+    public List<Sector> getResult() { return Collections.unmodifiableList(result); }
 
 }

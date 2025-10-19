@@ -15,7 +15,7 @@ public abstract class LLMProvider {
     private String buildPrompt(String category, int maxLength) {
         return String.format(
                 "Genera una frase in italiano per la categoria: %s." +
-                " La frase deve essere chiara, breve e avere al massimo: %d caratteri." +
+                " La frase deve essere chiara, breve e avere al massimo %d caratteri, compresi gli spazi." +
                 " Non deve includere parole offensive o marchi registrati.", category, maxLength);
     }
 
