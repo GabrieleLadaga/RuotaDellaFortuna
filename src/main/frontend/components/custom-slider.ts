@@ -140,9 +140,6 @@ export class CustomSlider extends LitElement {
 
         if(finalValue !== this.value) {
             this.setValue(finalValue);
-            //this.value = finalValue;
-            //this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
-            //this.requestUpdate();
         }
     }
 
@@ -161,9 +158,7 @@ export class CustomSlider extends LitElement {
     }
 
     setValue(newValue: number) {
-        console.log("New Value: " + newValue);
         if(this.value !== newValue) {
-            console.log("New Value2: " + newValue);
             this.value = newValue;
 
             this.requestUpdate();
@@ -179,9 +174,6 @@ export class CustomSlider extends LitElement {
     onInput(event: Event) {
         const target = event.target as HTMLInputElement;
         this.setValue(Number(target.value));
-        //this.value = Number(target.value);
-        //this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: this.value } }));
-        //this.requestUpdate();
     }
 
     render() {

@@ -84,7 +84,6 @@ public class OfflineSetupView extends VerticalLayout {
 
         roundSlider.addValueChangeListener(event ->{
             this.currentRounds = event.getValue();
-            System.out.println("Rounds aggiornati a: " + this.currentRounds);
         });
 
         VerticalLayout roundLayout = new VerticalLayout(roundLabel, roundSlider);
@@ -129,18 +128,13 @@ public class OfflineSetupView extends VerticalLayout {
         int numRounds = this.currentRounds;
         List<String> names = new ArrayList<>();
 
-        System.out.println("numRounds: " + numRounds);
-
         for(TextField field : nameField) {
             String name = field.getValue().trim().isEmpty() ? field.getPlaceholder() : field.getValue().trim();
             names.add(name);
         }
 
-        System.out.println("numRounds2: " + numRounds);
-
         GameContext ctx = GameContext.getInstance();
         ctx.getFacade().startGame(names, numRounds);
-        System.out.println("numRounds3: " + numRounds);
 
         getUI().ifPresent(ui -> ui.navigate("wheel"));
     }
