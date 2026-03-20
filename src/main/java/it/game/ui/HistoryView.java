@@ -23,16 +23,17 @@ public class HistoryView extends VerticalLayout {
     public HistoryView() {
         setSizeFull();
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        setSpacing(false);
+        setPadding(false);
 
         getStyle().set("background", "linear-gradient(110deg, #00008B, #9ac4f5)");
 
         VerticalLayout card = new VerticalLayout();
         card.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        card.setSpacing(true); //spaziatura automatica
-        card.setPadding(true); //padding automatico
-
-        card.setWidth("600px");
-        card.setHeight("750px");
+        card.setSpacing(true);
+        card.setPadding(true);
+        card.setWidth("920px");
+        card.setHeight("700px");
         card.addClassName("card");
 
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -45,21 +46,62 @@ public class HistoryView extends VerticalLayout {
         title.addClassName("title");
 
         Div spacer = new Div();
-        spacer.setHeight("50px");
+        spacer.setHeight("10px");
 
         Grid<HistoryManager.MatchHistory> grid = new Grid<>(HistoryManager.MatchHistory.class, false);
-        grid.addColumn(HistoryManager.MatchHistory::getId).setHeader("ID");
-        grid.addColumn(HistoryManager.MatchHistory::getDate).setHeader("Data");
-        grid.addColumn(HistoryManager.MatchHistory::getPlayer1).setHeader("Giocatore 1");
-        grid.addColumn(HistoryManager.MatchHistory::getPlayer2).setHeader("Giocatore 2");
-        grid.addColumn(HistoryManager.MatchHistory::getPlayer3).setHeader("Giocatore 3");
-        grid.addColumn(HistoryManager.MatchHistory::getPlayer4).setHeader("Giocatore 4");
-        grid.addColumn(HistoryManager.MatchHistory::getPlayer5).setHeader("Giocatore 5");
-        grid.addColumn(HistoryManager.MatchHistory::getWinner).setHeader("Vincitore");
-        grid.addColumn(HistoryManager.MatchHistory::getPrize).setHeader("Premio (€)");
 
-        grid.setWidth("90%");
-        grid.setHeight("600px");
+        grid.setWidthFull();
+        grid.setHeight("300px");
+
+        grid.setColumnReorderingAllowed(true);
+
+        grid.addColumn(HistoryManager.MatchHistory::getId)
+                .setHeader("ID")
+                .setFlexGrow(1)
+                .setAutoWidth(true);
+
+        grid.addColumn(HistoryManager.MatchHistory::getDate)
+                .setHeader("Data")
+                .setFlexGrow(2)
+                .setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String player = match.getPlayer1();
+            return (player != null && !player.isEmpty()) ? player : "/";
+        }).setHeader("Giocatore 1").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String player = match.getPlayer2();
+            return (player != null && !player.isEmpty()) ? player : "/";
+        }).setHeader("Giocatore 2").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String player = match.getPlayer3();
+            return (player != null && !player.isEmpty()) ? player : "/";
+        }).setHeader("Giocatore 3").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String player = match.getPlayer4();
+            return (player != null && !player.isEmpty()) ? player : "/";
+        }).setHeader("Giocatore 4").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String player = match.getPlayer5();
+            return (player != null && !player.isEmpty()) ? player : "/";
+        }).setHeader("Giocatore 5").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String winner = match.getWinner();
+            return (winner != null && !winner.isEmpty()) ? winner : "/";
+        }).setHeader("Vincitore").setFlexGrow(2).setAutoWidth(true);
+
+        grid.addColumn(match -> {
+            String prize = String.valueOf(match.getPrize());
+            return (prize != null && !prize.isEmpty()) ? prize : "/";
+        }).setHeader("Premio (€)").setFlexGrow(1).setAutoWidth(true);
+
+        grid.getStyle().set("overflow-y", "auto");
+        grid.getStyle().set("overflow-x", "hidden");
 
         try {
             List<HistoryManager.MatchHistory> matches = HistoryManager.getInstance().getAllMatch();
